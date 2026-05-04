@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: gtm-zero
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.gtmzero: DEBUG
+    org.flywaydb: INFO

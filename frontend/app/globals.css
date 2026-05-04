@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--color-zinc-950);
+  --color-foreground: var(--color-zinc-100);
+}
+
+html,
+body {
+  background-color: theme(--color-zinc-950);
+  color: theme(--color-zinc-100);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}

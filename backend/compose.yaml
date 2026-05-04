@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: gtmzero-postgres
+    environment:
+      POSTGRES_DB: gtmzero
+      POSTGRES_USER: gtmzero
+      POSTGRES_PASSWORD: gtmzero
+    ports:
+      - "5432:5432"
+    volumes:
+      - gtmzero_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gtmzero -d gtmzero"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  gtmzero_pgdata:
