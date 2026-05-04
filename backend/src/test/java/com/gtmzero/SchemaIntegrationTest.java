@@ -14,10 +14,16 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.ai.embedding.EmbeddingModel;
+
 @SpringBootTest
 @ActiveProfiles("dev")
 @Transactional
 class SchemaIntegrationTest {
+
+    @MockitoBean
+    private EmbeddingModel embeddingModel;
 
     @Autowired DocumentRepository      documentRepo;
     @Autowired DocumentChunkRepository chunkRepo;

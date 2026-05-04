@@ -88,6 +88,14 @@
             <artifactId>spring-ai-starter-model-anthropic</artifactId>
         </dependency>
 
+        <!-- Spring AI — OpenAI-compatible client, used for Voyage AI embeddings.
+             Using the core module (not the starter) to avoid OpenAI auto-configuration
+             that would conflict with our manually-wired Voyage bean. -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-openai</artifactId>
+        </dependency>
+
         <!-- Spring AI — pgvector store -->
         <dependency>
             <groupId>org.springframework.ai</groupId>
@@ -105,6 +113,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- SB4 split MockMvc test autoconfiguration into its own module -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-webmvc-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -145,6 +159,14 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <!-- Spring AI classpath is heavy; default fork heap is insufficient -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xmx2g -Xms512m</argLine>
                 </configuration>
             </plugin>
         </plugins>

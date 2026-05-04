@@ -1,14 +1,19 @@
 spring:
   autoconfigure:
-    # PgVectorStoreAutoConfiguration requires an EmbeddingModel bean.
-    # Voyage AI wiring happens in Part 2 — exclude until then.
-    exclude: org.springframework.ai.vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
+    # PgVectorStoreAutoConfiguration requires an EmbeddingModel bean wired its way.
+    # We build our own Voyage-backed EmbeddingModel in EmbeddingConfig and persist
+    # via JPA — exclude the auto-config to avoid conflicts.
+    # OpenAI auto-config not needed: we use spring-ai-openai (core), not the starter.
+    exclude:
+      - org.springframework.ai.vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
 
   datasource:
     url: jdbc:postgresql://localhost:5432/gtmzero
     username: gtmzero
     password: gtmzero
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
 
   jpa:
     open-in-view: false
@@ -35,3 +40,8 @@ spring:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
         dimensions: 1024           # voyage-3-large output dimension
+
+logging:
+  level:
+    com.gtmzero.service: DEBUG
+    org.springframework.ai: INFO
