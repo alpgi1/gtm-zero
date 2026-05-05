@@ -33,7 +33,8 @@ spring:
       chat:
         options:
           model: claude-sonnet-4-6
-          max-tokens: 8192
+          temperature: 0.2          # factual, not creative — citations must be stable
+          max-tokens: 600           # caps answer length, prevents demo-time runaway
     vectorstore:
       pgvector:
         initialize-schema: false   # Flyway owns this too

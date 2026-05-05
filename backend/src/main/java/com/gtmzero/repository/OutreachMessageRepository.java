@@ -1,6 +1,7 @@
 package com.gtmzero.repository;
 
 import com.gtmzero.entity.OutreachMessage;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +12,8 @@ public interface OutreachMessageRepository extends JpaRepository<OutreachMessage
     List<OutreachMessage> findAllByProspectIdOrderByCreatedAtDesc(UUID prospectId);
 
     List<OutreachMessage> findTop10ByOrderByCreatedAtDesc();
+
+    List<OutreachMessage> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    long countByProspectId(UUID prospectId);
 }

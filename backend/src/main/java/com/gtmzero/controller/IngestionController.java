@@ -51,14 +51,17 @@ public class IngestionController {
     }
 
     /**
-     * Seed the 5 Regu demo documents. Idempotent — skips already-ingested docs.
+     * Seed the Regu demo documents.
+     * Idempotent by default — skips already-ingested docs.
+     * Pass {@code ?force=true} to delete and re-ingest existing documents by title.
      */
     @PostMapping("/seed")
-    public ResponseEntity<List<IngestResult>> seedDocuments() {
-        log.info("POST /api/v1/admin/documents/seed — seeding Regu demo corpus");
+    public ResponseEntity<List<IngestResult>> seedDocuments(
+            @RequestParam(defaultValue = "false") boolean force) {
+        log.info("POST /api/v1/admin/documents/seed — force={}", force);
         List<IngestResult> results = new ArrayList<>();
         for (IngestDocumentRequest request : reguSeedData.getSeedDocuments()) {
-            IngestResult result = ingestionService.ingestDocument(request);
+            IngestResult result = ingestionService.ingestDocument(request, force);
             results.add(result);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(results);

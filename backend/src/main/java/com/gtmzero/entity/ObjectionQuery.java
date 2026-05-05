@@ -5,10 +5,17 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Implements {@link Persistable} because the ObjectionService pre-assigns the ID
+ * (so the in-memory response and the persisted row share an identifier).
+ * Without this, {@link EntityManager#persist} would treat any non-null-id entity
+ * as "detached" and refuse to insert.
+ */
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,10 +24,12 @@ import java.util.UUID;
 @ToString(exclude = {"question", "answer"})
 @Entity
 @Table(name = "objection_queries")
-public class ObjectionQuery {
+public class ObjectionQuery implements Persistable<UUID> {
 
+    // No @GeneratedValue — IDs are pre-assigned by the orchestrator so the in-memory
+    // ObjectionResponse and the persisted row share the same identifier. Hibernate
+    // would otherwise treat any non-null-id new entity as "detached" on persist.
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -58,4 +67,23 @@ public class ObjectionQuery {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
+
+    /**
+     * True until Hibernate loads the entity. Set to false post-load via
+     * {@link PostLoad} so subsequent re-persist of a fetched entity would
+     * correctly route through merge.
+     */
+    @Builder.Default
+    @Transient
+    private boolean isNew = true;
+
+    @Override
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @PostLoad @PostPersist
+    private void markNotNew() {
+        this.isNew = false;
+    }
 }

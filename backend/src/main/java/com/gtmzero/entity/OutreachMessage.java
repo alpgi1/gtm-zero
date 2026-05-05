@@ -23,7 +23,7 @@ public class OutreachMessage {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "prospect_id", nullable = false)
     private Prospect prospect;
 

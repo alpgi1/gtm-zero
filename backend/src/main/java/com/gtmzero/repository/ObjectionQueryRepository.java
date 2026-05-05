@@ -1,6 +1,7 @@
 package com.gtmzero.repository;
 
 import com.gtmzero.entity.ObjectionQuery;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface ObjectionQueryRepository extends JpaRepository<ObjectionQuery, 
     long countBySessionId(UUID sessionId);
 
     List<ObjectionQuery> findTop20ByOrderByCreatedAtDesc();
+
+    List<ObjectionQuery> findAllByOrderByCreatedAtDesc(Pageable pageable);
 }

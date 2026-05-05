@@ -1,0 +1,9 @@
+# Test-only overrides. Loaded automatically when src/test/resources is on the
+# classpath; merges with src/main/resources/application.yml (this file wins).
+app:
+  outreach-seed:
+    # Don't burn LLM calls on every Spring context startup in tests. Each
+    # OutreachServiceIntegrationTest and OutreachControllerTest already sets
+    # this via @TestPropertySource; this default keeps unrelated test classes
+    # (Ingestion/Objection/Schema) from triggering seed attempts too.
+    enabled: false

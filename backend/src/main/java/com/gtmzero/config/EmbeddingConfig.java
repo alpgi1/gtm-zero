@@ -27,12 +27,13 @@ public class EmbeddingConfig {
                 .baseUrl("https://api.voyageai.com")
                 .build();
 
+        // voyage-3-large outputs 1024 dims by default; Voyage's API does NOT accept
+        // the 'dimensions' parameter (unlike OpenAI's text-embedding-3-* models).
         return new OpenAiEmbeddingModel(
                 openAiApi,
                 MetadataMode.EMBED,
                 OpenAiEmbeddingOptions.builder()
                         .model("voyage-3-large")
-                        .dimensions(1024)
                         .build()
         );
     }

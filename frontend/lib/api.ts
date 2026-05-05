@@ -1,3 +1,5 @@
+import type { DashboardResponse } from "./types";
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080/api/v1";
 
@@ -14,6 +16,7 @@ export class ApiError extends Error {
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
     headers: { "Content-Type": "application/json", ...init?.headers },
+    cache: "no-store",
     ...init,
   });
 
@@ -36,4 +39,10 @@ export interface HealthResponse {
 
 export function checkHealth(): Promise<HealthResponse> {
   return apiFetch<HealthResponse>("/health");
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────
+
+export function fetchDashboard(): Promise<DashboardResponse> {
+  return apiFetch<DashboardResponse>("/dashboard");
 }

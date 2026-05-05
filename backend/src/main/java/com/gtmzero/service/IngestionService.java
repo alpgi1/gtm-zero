@@ -40,17 +40,28 @@ public class IngestionService {
 
     @Transactional
     public IngestResult ingestDocument(IngestDocumentRequest request) {
+        return ingestDocument(request, false);
+    }
+
+    @Transactional
+    public IngestResult ingestDocument(IngestDocumentRequest request, boolean force) {
         long start = System.currentTimeMillis();
 
-        // 1. Idempotency check
+        // 1. Idempotency check (or forced re-ingest)
         Optional<Document> existing = documentRepository.findByTitle(request.title());
         if (existing.isPresent()) {
-            Document doc = existing.get();
-            long elapsed = System.currentTimeMillis() - start;
-            log.info("Document '{}' already exists (id={}), skipping ingestion",
-                    request.title(), doc.getId());
-            return new IngestResult(doc.getId(), doc.getTitle(),
-                    doc.getChunkCount(), elapsed, true);
+            if (!force) {
+                Document doc = existing.get();
+                long elapsed = System.currentTimeMillis() - start;
+                log.info("Document '{}' already exists (id={}), skipping ingestion",
+                        request.title(), doc.getId());
+                return new IngestResult(doc.getId(), doc.getTitle(),
+                        doc.getChunkCount(), elapsed, true);
+            }
+            log.info("force=true — deleting existing document '{}' before re-ingestion",
+                    request.title());
+            documentRepository.delete(existing.get());
+            documentRepository.flush();
         }
 
         // 2. Chunk the raw content

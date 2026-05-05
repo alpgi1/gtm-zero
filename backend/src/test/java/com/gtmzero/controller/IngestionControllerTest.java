@@ -1,6 +1,8 @@
 package com.gtmzero.controller;
 
 import com.gtmzero.dto.IngestDocumentRequest;
+import com.gtmzero.repository.DocumentRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +32,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class IngestionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private JsonMapper jsonMapper;
+    @Autowired private DocumentRepository documentRepository;
 
-    @Autowired
-    private JsonMapper jsonMapper;
+    @MockitoBean private EmbeddingModel embeddingModel;
 
-    @MockitoBean
-    private EmbeddingModel embeddingModel;
+    @BeforeEach
+    void cleanDatabase() {
+        documentRepository.deleteAllInBatch();
+    }
 
     private static final String TEST_CONTENT = """
             # Controller Test Document

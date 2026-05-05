@@ -2,6 +2,7 @@ package com.gtmzero;
 
 import com.gtmzero.entity.*;
 import com.gtmzero.repository.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,16 @@ class SchemaIntegrationTest {
     private EmbeddingModel embeddingModel;
 
     @Autowired DocumentRepository      documentRepo;
+
+    @BeforeEach
+    void cleanDatabase() {
+        chunkRepo.deleteAllInBatch();
+        documentRepo.deleteAllInBatch();
+        prospectRepo.deleteAllInBatch();
+        outreachRepo.deleteAllInBatch();
+        objectionRepo.deleteAllInBatch();
+        auditLogRepo.deleteAllInBatch();
+    }
     @Autowired DocumentChunkRepository chunkRepo;
     @Autowired ProspectRepository      prospectRepo;
     @Autowired OutreachMessageRepository outreachRepo;
@@ -96,7 +107,9 @@ class SchemaIntegrationTest {
         assertEquals(1, outreachRepo.findAllByProspectIdOrderByCreatedAtDesc(prospect.getId()).size());
 
         // ── Persist an ObjectionQuery ────────────────────────────────
+        // ObjectionQuery has no @GeneratedValue — IDs are pre-assigned by the orchestrator.
         ObjectionQuery objection = ObjectionQuery.builder()
+                .id(UUID.randomUUID())
                 .sessionId(UUID.randomUUID())
                 .question("How does it handle latency?")
                 .answer("Sub-2s p99 via streaming.")
