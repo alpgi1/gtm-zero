@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 
 export function Sidebar() {
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-bg-base border-r border-border-subtle flex flex-col z-10">
-      <header className="h-16 flex items-center justify-between px-5 border-b border-border-subtle">
+    <aside className="fixed left-0 top-0 h-screen w-[240px] bg-bg-base border-r border-border-subtle flex flex-col z-30">
+      <header className="h-16 flex items-center justify-between pl-5 pr-4 border-b border-border-subtle">
         <Logo />
         <Badge variant="default">v0.1</Badge>
       </header>
@@ -28,12 +28,12 @@ export function Sidebar() {
         />
       </nav>
 
-      <footer className="px-5 py-4 border-t border-border-subtle flex flex-col gap-1">
-        <span className="text-[11px] font-mono text-text-tertiary">
-          MVP · Built in Munich
+      <footer className="px-3 py-3 border-t border-border-subtle flex flex-col gap-0.5">
+        <span className="text-[10.5px] font-mono text-text-tertiary leading-relaxed">
+          MVP · Munich
         </span>
-        <span className="text-[11px] font-mono text-text-tertiary">
-          START Munich · 10.05.2026
+        <span className="text-[10.5px] font-mono text-text-tertiary leading-relaxed">
+          START · 10.05.26
         </span>
       </footer>
     </aside>

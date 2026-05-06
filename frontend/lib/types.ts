@@ -16,6 +16,8 @@ export interface DashboardActivityItem {
   summary: string;
   createdAt: string;
   citations: DashboardCitation[];
+  /** True for offline-fallback rows. Backend rows always omit / set false. */
+  synthetic?: boolean;
 }
 
 export interface DashboardMetrics {

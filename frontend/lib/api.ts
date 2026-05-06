@@ -1,4 +1,5 @@
 import type { DashboardResponse } from "./types";
+import { getSyntheticDashboard } from "./synthetic";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8080/api/v1";
@@ -45,4 +46,22 @@ export function checkHealth(): Promise<HealthResponse> {
 
 export function fetchDashboard(): Promise<DashboardResponse> {
   return apiFetch<DashboardResponse>("/dashboard");
+}
+
+/**
+ * Fetches the dashboard but silently falls back to a synthetic payload if
+ * the backend is unreachable. Returns `{ data, online }` so the caller can
+ * tag UI as synthetic without surfacing an error to the user.
+ */
+export async function fetchDashboardOrSynthetic(): Promise<{
+  data: DashboardResponse;
+  online: boolean;
+}> {
+  try {
+    const data = await fetchDashboard();
+    return { data, online: true };
+  } catch (e) {
+    console.warn("[gtm-zero] dashboard fetch failed, using synthetic:", e);
+    return { data: getSyntheticDashboard(), online: false };
+  }
 }

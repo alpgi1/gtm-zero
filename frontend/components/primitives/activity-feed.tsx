@@ -32,8 +32,13 @@ function ActivityFeedItem({ item }: { item: DashboardActivityItem }) {
       </span>
       <div className="flex-1 min-w-0">
         <p className="text-sm text-text-primary truncate">{item.summary}</p>
-        <p className="text-xs text-text-tertiary mt-0.5">
-          {formatRelativeTime(item.createdAt)}
+        <p className="text-xs text-text-tertiary mt-0.5 flex items-center gap-2">
+          <span>{formatRelativeTime(item.createdAt)}</span>
+          {item.synthetic && (
+            <span className="font-mono text-[10px] text-text-tertiary uppercase tracking-wider">
+              · synthetic
+            </span>
+          )}
         </p>
         {showCitations && (
           <div className="mt-2 flex flex-wrap gap-1.5">
