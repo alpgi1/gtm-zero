@@ -1,4 +1,11 @@
-import type { DashboardResponse } from "./types";
+import type {
+  DashboardResponse,
+  DocumentDetail,
+  DocumentListItem,
+  GenerateOutreachRequest,
+  OutreachHistoryDto,
+  OutreachResponseDto,
+} from "./types";
 import { getSyntheticDashboard } from "./synthetic";
 
 const BASE_URL =
@@ -64,4 +71,45 @@ export async function fetchDashboardOrSynthetic(): Promise<{
     console.warn("[gtm-zero] dashboard fetch failed, using synthetic:", e);
     return { data: getSyntheticDashboard(), online: false };
   }
+}
+
+// ── Outreach ──────────────────────────────────────────────────────────────
+
+export function fetchRecentOutreach(
+  limit = 20,
+): Promise<OutreachHistoryDto[]> {
+  return apiFetch<OutreachHistoryDto[]>(`/outreach/recent?limit=${limit}`);
+}
+
+export function fetchOutreach(id: string): Promise<OutreachResponseDto> {
+  return apiFetch<OutreachResponseDto>(`/outreach/${id}`);
+}
+
+export function generateOutreach(
+  payload: GenerateOutreachRequest,
+): Promise<OutreachResponseDto> {
+  return apiFetch<OutreachResponseDto>("/outreach/generate", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function markOutreachSent(id: string): Promise<OutreachResponseDto> {
+  return apiFetch<OutreachResponseDto>(`/outreach/${id}/send-mock`, {
+    method: "POST",
+  });
+}
+
+// ── Documents ─────────────────────────────────────────────────────────────
+
+export function fetchDocuments(): Promise<DocumentListItem[]> {
+  return apiFetch<DocumentListItem[]>("/admin/documents");
+}
+
+export function fetchDocumentDetail(id: string): Promise<DocumentDetail> {
+  return apiFetch<DocumentDetail>(`/admin/documents/${id}`);
+}
+
+export function reseedDocuments(force = true): Promise<unknown> {
+  return apiFetch(`/admin/documents/seed?force=${force}`, { method: "POST" });
 }

@@ -109,7 +109,13 @@ public class OutreachController {
     }
 
     @GetMapping("/api/v1/prospects")
-    public ResponseEntity<List<ProspectSummaryDto>> listProspects() {
+    public ResponseEntity<?> listProspects(
+            @RequestParam(name = "linkedinUrl", required = false) String linkedinUrl) {
+        if (linkedinUrl != null && !linkedinUrl.isBlank()) {
+            return prospectService.findByLinkedinUrl(linkedinUrl)
+                    .<ResponseEntity<?>>map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        }
         return ResponseEntity.ok(prospectService.listAll());
     }
 
@@ -174,9 +180,12 @@ public class OutreachController {
                 p.getFullName(),
                 p.getRole(),
                 p.getCompanyName(),
+                p.getCompanyDomain(),
+                p.getLinkedinUrl(),
                 p.getTechStackSignals() == null ? List.of() : List.of(p.getTechStackSignals()),
                 msg.getSubject(),
                 msg.getBody(),
+                msg.getPersonalizationBasis(),
                 msg.getGenerationModel(),
                 msg.getGenerationPromptVersion(),
                 msg.getGenerationLatencyMs() == null ? 0L : msg.getGenerationLatencyMs(),

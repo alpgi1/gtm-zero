@@ -29,3 +29,6 @@ logs/
 # Spring Boot
 *.jar
 !.mvn/wrapper/maven-wrapper.jar
+
+# Pitch docs (private)
+docs/

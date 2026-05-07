@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Public objection-handling endpoints.
@@ -121,6 +123,27 @@ public class ObjectionController {
         int safeLimit = Math.max(1, Math.min(limit, 200));
         List<ObjectionQuery> rows = objectionQueryRepository.findAllByOrderByCreatedAtDesc(
                 PageRequest.of(0, safeLimit));
+        List<RecentObjectionResponse> response = rows.stream()
+                .map(q -> new RecentObjectionResponse(
+                        q.getId(),
+                        q.getSessionId(),
+                        q.getQuestion(),
+                        q.getAnswer(),
+                        q.getCitationCount(),
+                        q.getFirstTokenLatencyMs(),
+                        q.getTotalLatencyMs(),
+                        q.getModel(),
+                        q.getCreatedAt()
+                ))
+                .toList();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/session/{sessionId}")
+    public ResponseEntity<List<RecentObjectionResponse>> sessionHistory(
+            @PathVariable UUID sessionId) {
+        List<ObjectionQuery> rows = objectionQueryRepository
+                .findAllBySessionIdOrderByCreatedAtAsc(sessionId);
         List<RecentObjectionResponse> response = rows.stream()
                 .map(q -> new RecentObjectionResponse(
                         q.getId(),

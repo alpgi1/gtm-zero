@@ -23,7 +23,7 @@ export function ArchitecturePulse() {
     <section aria-labelledby="arch-pulse-heading">
       <h2
         id="arch-pulse-heading"
-        className="text-[11px] font-medium uppercase tracking-wider text-text-tertiary mb-6"
+        className="text-[11px] font-medium uppercase tracking-wider text-text-secondary mb-6"
       >
         How GTM-Zero answers
       </h2>
@@ -56,8 +56,8 @@ export function ArchitecturePulse() {
                 <span className="h-2 w-2 rounded-pill bg-accent" />
               </motion.div>
               <div className="flex flex-col items-center gap-0.5">
-                <span className="text-[11px] text-text-secondary">{node.label}</span>
-                <span className="text-[10.5px] font-mono text-text-tertiary">
+                <span className="text-[12px] text-text-primary">{node.label}</span>
+                <span className="text-[11px] font-mono text-text-secondary">
                   {node.timing}
                 </span>
               </div>

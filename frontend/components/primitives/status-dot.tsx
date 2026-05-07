@@ -12,7 +12,7 @@ const STATUS_COLOR: Record<Status, string> = {
 export function StatusDot({ status, label }: { status: Status; label: string }) {
   return (
     <span className="inline-flex items-center gap-2">
-      <span className={cn("h-1.5 w-1.5 rounded-pill", STATUS_COLOR[status])} />
+      <span className={cn("h-2 w-2 rounded-pill", STATUS_COLOR[status])} />
       <span className="text-[12px] font-mono text-text-secondary">{label}</span>
     </span>
   );

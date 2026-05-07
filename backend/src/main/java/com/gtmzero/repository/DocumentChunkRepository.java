@@ -14,6 +14,8 @@ public interface DocumentChunkRepository extends JpaRepository<DocumentChunk, UU
 
     List<DocumentChunk> findAllByIdIn(List<UUID> ids);
 
+    List<DocumentChunk> findAllByDocumentIdOrderByChunkIndexAsc(UUID documentId);
+
     // Accepts the query embedding as a pre-formatted pgvector string "[x1,x2,...]".
     // String parameter avoids float[]-to-vector marshaling at the JDBC layer;
     // the explicit CAST lets PostgreSQL's vector_in() function handle parsing.

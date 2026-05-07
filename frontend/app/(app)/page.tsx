@@ -157,7 +157,7 @@ export default function DashboardPage() {
       {/* Activity */}
       <section className="mb-14">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-[11px] font-medium uppercase tracking-wider text-text-tertiary">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-text-secondary">
             Recent activity
           </span>
           <span className="font-mono text-[11px] text-text-tertiary">
@@ -170,7 +170,7 @@ export default function DashboardPage() {
 
       {/* Suggestion chips */}
       <section className="mb-12">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-text-tertiary">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-text-secondary">
           What GTM-Zero handles today
         </span>
         <div className="mt-4 flex flex-wrap gap-2">

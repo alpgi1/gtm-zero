@@ -125,6 +125,13 @@ public class ProspectService {
                 .map(p -> toSummary(p, (int) outreachMessageRepository.countByProspectId(p.getId())));
     }
 
+    @Transactional(readOnly = true)
+    public Optional<ProspectSummaryDto> findByLinkedinUrl(String url) {
+        if (isBlank(url)) return Optional.empty();
+        return prospectRepository.findByLinkedinUrl(url)
+                .map(p -> toSummary(p, (int) outreachMessageRepository.countByProspectId(p.getId())));
+    }
+
     public ProspectSummaryDto toSummary(Prospect p, int outreachCount) {
         return new ProspectSummaryDto(
                 p.getId(),

@@ -1,9 +1,12 @@
 package com.gtmzero.controller;
 
+import com.gtmzero.dto.DocumentDetailDto;
 import com.gtmzero.dto.DocumentListResponse;
 import com.gtmzero.dto.IngestDocumentRequest;
 import com.gtmzero.dto.IngestResult;
 import com.gtmzero.entity.Document;
+import com.gtmzero.entity.DocumentChunk;
+import com.gtmzero.repository.DocumentChunkRepository;
 import com.gtmzero.repository.DocumentRepository;
 import com.gtmzero.seed.ReguSeedData;
 import com.gtmzero.service.IngestionService;
@@ -23,18 +26,22 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/api/v1/admin/documents")
+@CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
 public class IngestionController {
 
     private final IngestionService ingestionService;
     private final DocumentRepository documentRepository;
+    private final DocumentChunkRepository documentChunkRepository;
     private final ReguSeedData reguSeedData;
 
     public IngestionController(IngestionService ingestionService,
                                DocumentRepository documentRepository,
+                               DocumentChunkRepository documentChunkRepository,
                                ReguSeedData reguSeedData) {
         this.ingestionService = ingestionService;
         this.documentRepository = documentRepository;
+        this.documentChunkRepository = documentChunkRepository;
         this.reguSeedData = reguSeedData;
     }
 
@@ -78,12 +85,50 @@ public class IngestionController {
                         doc.getId(),
                         doc.getTitle(),
                         doc.getSourceType(),
+                        doc.getCharCount(),
                         doc.getChunkCount(),
                         doc.getIngestedAt(),
                         doc.getCreatedAt()
                 ))
                 .toList();
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Detail view: a single document plus truncated chunk previews.
+     * Snippet length is fixed at 240 chars to keep payload small.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<DocumentDetailDto> getDocument(@PathVariable UUID id) {
+        return documentRepository.findById(id)
+                .map(doc -> {
+                    List<DocumentChunk> chunks = documentChunkRepository
+                            .findAllByDocumentIdOrderByChunkIndexAsc(doc.getId());
+                    List<DocumentDetailDto.ChunkPreview> previews = chunks.stream()
+                            .map(c -> new DocumentDetailDto.ChunkPreview(
+                                    c.getId(),
+                                    c.getChunkIndex(),
+                                    c.getTokenCount(),
+                                    snippet(c.getContent())))
+                            .toList();
+                    return ResponseEntity.ok(new DocumentDetailDto(
+                            doc.getId(),
+                            doc.getTitle(),
+                            doc.getSourceType(),
+                            doc.getSourcePath(),
+                            doc.getCharCount(),
+                            doc.getChunkCount(),
+                            doc.getIngestedAt(),
+                            previews));
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private static String snippet(String content) {
+        if (content == null) return "";
+        String trimmed = content.strip();
+        if (trimmed.length() <= 240) return trimmed;
+        return trimmed.substring(0, 240) + "…";
     }
 
     /**

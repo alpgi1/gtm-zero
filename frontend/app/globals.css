@@ -7,13 +7,13 @@
   --color-bg-elevated: #1C1C1F;
 
   /* Borders */
-  --color-border-subtle: #26262A;
+  --color-border-subtle: #2E2E33;
   --color-border-strong: #3A3A3F;
 
   /* Text */
   --color-text-primary: #FAFAFA;
-  --color-text-secondary: #A1A1A6;
-  --color-text-tertiary: #6B6B70;
+  --color-text-secondary: #B8B8BD;
+  --color-text-tertiary: #828287;
 
   /* Signature accent — amber */
   --color-accent: #FFB020;

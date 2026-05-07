@@ -42,6 +42,9 @@ public class OutreachMessage {
     @Column(name = "generation_latency_ms")
     private Integer generationLatencyMs;
 
+    @Column(name = "personalization_basis", columnDefinition = "TEXT")
+    private String personalizationBasis;
+
     @Builder.Default
     @Column(name = "status", nullable = false, length = 50)
     private String status = "GENERATED";

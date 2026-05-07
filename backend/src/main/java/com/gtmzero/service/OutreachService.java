@@ -106,6 +106,7 @@ public class OutreachService {
                 .prospect(prospect)
                 .subject(parsed.subject)
                 .body(parsed.body)
+                .personalizationBasis(parsed.personalizationBasis)
                 .generationModel(modelName)
                 .generationPromptVersion(built.promptVersion())
                 .generationLatencyMs((int) latencyMs)
@@ -273,9 +274,12 @@ public class OutreachService {
                 prospect.getFullName(),
                 prospect.getRole(),
                 prospect.getCompanyName(),
+                prospect.getCompanyDomain(),
+                prospect.getLinkedinUrl(),
                 usedSignals,
                 msg.getSubject(),
                 msg.getBody(),
+                msg.getPersonalizationBasis(),
                 msg.getGenerationModel(),
                 msg.getGenerationPromptVersion(),
                 msg.getGenerationLatencyMs() == null ? 0L : msg.getGenerationLatencyMs(),

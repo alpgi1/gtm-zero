@@ -11,6 +11,7 @@ public record DocumentListResponse(
         UUID id,
         String title,
         String sourceType,
+        int charCount,
         int chunkCount,
         Instant ingestedAt,
         Instant createdAt
